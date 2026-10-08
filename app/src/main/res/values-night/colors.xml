@@ -1,65 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 黑白双色设计系统 · 夜间模式（跟随系统自动切换） -->
+<!--
+  Material 3 动态颜色设计系统 · 夜间模式
+  支持 Android 12+ 壁纸主题色提取；低版本设备使用下方静态 fallback 配色（青色系）
+-->
 <resources>
-    <!-- 背景层：纯黑主背景，深灰次级背景 -->
-    <color name="page">#000000</color>
-    <color name="background">#000000</color>
-    <color name="surface">#000000</color>
-    <color name="surface_variant">#121212</color>
-    <color name="panel_2">#121212</color>
-    <color name="outline">#262626</color>
-    <color name="divider">#1F1F1F</color>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         Material 3 Fallback 色板（Teal/Cyan 青色系 Dark Mode）
+         ═══════════════════════════════════════════════════════════════════════ -->
 
-    <!-- 对比卡片：夜间=纯白底黑字 -->
-    <color name="dark_card">#FFFFFF</color>
-    <color name="dark_card_inner">#EBEBEB</color>
-    <color name="dark_card_surface">#E0E0E0</color>
-    <color name="on_dark_card">#000000</color>
-    <color name="on_dark_card_variant">#525252</color>
+    <!-- Primary 色系 -->
+    <color name="md_theme_dark_primary">#80D5D4</color>
+    <color name="md_theme_dark_onPrimary">#003737</color>
+    <color name="md_theme_dark_primaryContainer">#004F4F</color>
+    <color name="md_theme_dark_onPrimaryContainer">#9CF1F0</color>
 
-    <!-- 文字层：一级纯白 / 二级浅灰 / 辅助中灰 -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#ADADAD</color>
-    <color name="text_tertiary">#7A7A7A</color>
-    <color name="on_background">#FFFFFF</color>
-    <color name="on_surface">#FFFFFF</color>
-    <color name="on_surface_variant">#A3A3A3</color>
+    <!-- Secondary 色系 -->
+    <color name="md_theme_dark_secondary">#B0CCCB</color>
+    <color name="md_theme_dark_onSecondary">#1B3534</color>
+    <color name="md_theme_dark_secondaryContainer">#324B4B</color>
+    <color name="md_theme_dark_onSecondaryContainer">#CCE8E7</color>
 
-    <!-- 组件层：主按钮/选中态纯白填充 -->
-    <color name="primary">#FFFFFF</color>
-    <color name="primary_variant">#E6E6E6</color>
-    <color name="accent">#FFFFFF</color>
-    <color name="accent_soft">#121212</color>
-    <color name="on_primary">#000000</color>
+    <!-- Tertiary 色系 -->
+    <color name="md_theme_dark_tertiary">#B3C8E8</color>
+    <color name="md_theme_dark_onTertiary">#1C314B</color>
+    <color name="md_theme_dark_tertiaryContainer">#334863</color>
+    <color name="md_theme_dark_onTertiaryContainer">#D3E4FF</color>
 
-    <color name="secondary">#D9D9D9</color>
-    <color name="secondary_variant">#BFBFBF</color>
-    <color name="on_secondary">#000000</color>
+    <!-- Error 色系 -->
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
 
-    <!-- 状态色：仅灰度 -->
-    <color name="status_disconnected">#5C5C5C</color>
-    <color name="ble_indicator">#ADADAD</color>
-    <color name="wifi_indicator">#FFFFFF</color>
+    <!-- 背景与表面 -->
+    <color name="md_theme_dark_background">#0E1514</color>
+    <color name="md_theme_dark_onBackground">#E0E3E2</color>
+    <color name="md_theme_dark_surface">#0E1514</color>
+    <color name="md_theme_dark_onSurface">#E0E3E2</color>
+    <color name="md_theme_dark_surfaceVariant">#3F4948</color>
+    <color name="md_theme_dark_onSurfaceVariant">#BEC9C8</color>
 
-    <!-- v2.6.5 品牌强调色（尼康黄）。夜间用同一支黄：它在纯黑底上的对比度 ≥ 15:1，
-         不必为深色另调一支 —— 两支黄会让"品牌色"在明暗主题之间漂移。
-         使用范围同样只限「连接状态指示灯」与「主功能按钮」。 -->
-    <color name="nikon_yellow">#FFE100</color>
-    <color name="on_nikon_yellow">#000000</color>
-    <color name="status_connected">#FFE100</color>
+    <!-- Surface Container 层级（Material 3 elevation tones） -->
+    <color name="md_theme_dark_surfaceContainerLowest">#090F0E</color>
+    <color name="md_theme_dark_surfaceContainerLow">#171D1C</color>
+    <color name="md_theme_dark_surfaceContainer">#1B2121</color>
+    <color name="md_theme_dark_surfaceContainerHigh">#252B2B</color>
+    <color name="md_theme_dark_surfaceContainerHighest">#303636</color>
 
-    <!-- 点击反馈 / 遮罩 -->
-    <color name="chip_unselected">#1A1A1A</color>
+    <!-- 边框与分隔 -->
+    <color name="md_theme_dark_outline">#889392</color>
+    <color name="md_theme_dark_outlineVariant">#3F4948</color>
 
-    <!-- Live View 专用 -->
+    <!-- 其他 -->
+    <color name="md_theme_dark_inverseSurface">#E0E3E2</color>
+    <color name="md_theme_dark_inverseOnSurface">#2D3131</color>
+    <color name="md_theme_dark_inversePrimary">#006A6A</color>
+    <color name="md_theme_dark_scrim">#000000</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         语义色 token（用于代码/布局引用）
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 背景层 -->
+    <color name="background">@color/md_theme_dark_background</color>
+    <color name="surface">@color/md_theme_dark_surface</color>
+    <color name="surface_variant">@color/md_theme_dark_surfaceVariant</color>
+    <color name="surface_container">@color/md_theme_dark_surfaceContainer</color>
+    <color name="surface_container_high">@color/md_theme_dark_surfaceContainerHigh</color>
+    <color name="surface_container_low">@color/md_theme_dark_surfaceContainerLow</color>
+
+    <!-- 主色 -->
+    <color name="primary">@color/md_theme_dark_primary</color>
+    <color name="primary_variant">@color/md_theme_dark_primaryContainer</color>
+    <color name="on_primary">@color/md_theme_dark_onPrimary</color>
+    <color name="primary_container">@color/md_theme_dark_primaryContainer</color>
+    <color name="on_primary_container">@color/md_theme_dark_onPrimaryContainer</color>
+
+    <!-- 次要色 -->
+    <color name="secondary">@color/md_theme_dark_secondary</color>
+    <color name="secondary_variant">@color/md_theme_dark_secondaryContainer</color>
+    <color name="on_secondary">@color/md_theme_dark_onSecondary</color>
+    <color name="secondary_container">@color/md_theme_dark_secondaryContainer</color>
+    <color name="on_secondary_container">@color/md_theme_dark_onSecondaryContainer</color>
+
+    <!-- 第三色 -->
+    <color name="tertiary">@color/md_theme_dark_tertiary</color>
+    <color name="tertiary_container">@color/md_theme_dark_tertiaryContainer</color>
+    <color name="on_tertiary">@color/md_theme_dark_onTertiary</color>
+    <color name="on_tertiary_container">@color/md_theme_dark_onTertiaryContainer</color>
+
+    <!-- 文字层 -->
+    <color name="text_primary">@color/md_theme_dark_onSurface</color>
+    <color name="text_secondary">@color/md_theme_dark_onSurfaceVariant</color>
+    <color name="text_tertiary">#889392</color>
+    <color name="on_background">@color/md_theme_dark_onBackground</color>
+    <color name="on_surface">@color/md_theme_dark_onSurface</color>
+    <color name="on_surface_variant">@color/md_theme_dark_onSurfaceVariant</color>
+
+    <!-- 边框 -->
+    <color name="outline">@color/md_theme_dark_outline</color>
+    <color name="outline_variant">@color/md_theme_dark_outlineVariant</color>
+    <color name="divider">@color/md_theme_dark_outlineVariant</color>
+
+    <!-- 错误状态 -->
+    <color name="error">@color/md_theme_dark_error</color>
+    <color name="on_error">@color/md_theme_dark_onError</color>
+    <color name="error_container">@color/md_theme_dark_errorContainer</color>
+
+    <!-- 状态色 -->
+    <color name="status_connected">@color/md_theme_dark_primary</color>
+    <color name="status_disconnected">#6B7280</color>
+
+    <!-- 强调色（兼容旧代码） -->
+    <color name="accent">@color/md_theme_dark_primary</color>
+    <color name="accent_soft">@color/md_theme_dark_primaryContainer</color>
+    <color name="panel_2">@color/md_theme_dark_surfaceContainerLow</color>
+
+    <!-- Chip 组件 -->
+    <color name="chip_unselected">@color/md_theme_dark_surfaceContainerHigh</color>
+    <color name="chip_selected">@color/md_theme_dark_secondaryContainer</color>
+
+    <!-- Switch 开关 -->
+    <color name="switch_track_off">#938F99</color>
+    <color name="switch_thumb_off">#FFFFFF</color>
+
+    <!-- 对比卡片（设备信息卡：亮色背景以突出） -->
+    <color name="dark_card">@color/md_theme_dark_inverseSurface</color>
+    <color name="dark_card_inner">#C8CECE</color>
+    <color name="dark_card_surface">#D8DCDC</color>
+    <color name="on_dark_card">@color/md_theme_dark_inverseOnSurface</color>
+    <color name="on_dark_card_variant">#525959</color>
+
+    <!-- 导航栏 -->
+    <color name="nav_background">@color/md_theme_dark_surfaceContainer</color>
+    <color name="nav_selected_bg">@color/md_theme_dark_secondaryContainer</color>
+    <color name="nav_active_icon">@color/md_theme_dark_onSecondaryContainer</color>
+    <color name="nav_inactive_icon">@color/md_theme_dark_onSurfaceVariant</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         Live View 专用色（深色主题，与浅色模式相同）
+         ═══════════════════════════════════════════════════════════════════════ -->
     <color name="liveview_scrim">#99000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="liveview_text">#E6FFFFFF</color>
 
-    <!-- 底部导航 -->
-    <color name="nav_background">#000000</color>
-    <color name="nav_selected_bg">#26FFFFFF</color>
-    <color name="nav_active_icon">#FFFFFF</color>
-    <color name="nav_inactive_icon">#6E6E6E</color>
+    <color name="lv_accent">#80D5D4</color>
+    <color name="lv_accent_soft">#2680D5D4</color>
+    <color name="lv_panel">#F5141416</color>
+    <color name="lv_card">#F21B1B1D</color>
+    <color name="lv_card_solid">#F21B1B1D</color>
+    <color name="lv_chip">#F2252527</color>
+    <color name="lv_chip_active">#33FFFFFF</color>
+    <color name="lv_text">#FFFFFFFF</color>
+    <color name="lv_text_dim">#8CFFFFFF</color>
+    <color name="lv_outline">#26FFFFFF</color>
+    <color name="lv_badge_red">#8A2B26</color>
+    <color name="lv_seg_track">#1FFFFFFF</color>
+    <color name="lv_seg_sel">#33FFFFFF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         兼容旧代码的 token
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <color name="page">@color/background</color>
+    <color name="nikon_yellow">@color/md_theme_dark_primary</color>
+    <color name="on_nikon_yellow">@color/md_theme_dark_onPrimary</color>
+    <color name="ble_indicator">@color/text_secondary</color>
+    <color name="wifi_indicator">@color/text_primary</color>
 </resources>

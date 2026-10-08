@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Tab1 设备首页：覆盖式顶栏 + 下拉刷新 + 设备卡/网格/详情折叠组。
-  根是 FrameLayout：滚动区满高，topChrome（标题行 + 分割线 + 连接模式三选行）作为**不透明**
-  覆盖层压在上面。顶栏玻璃已撤销（v2.3.1 §15.5h：背后是本页滚动区，采样慢一帧必然错位/闪烁，
-  而白页上透出白 = 零收益），所以两种外观下顶栏完全一致。
-  滚动区的 paddingTop 由 DashboardFragment 按 topChrome 实测高度给（首次布局前量不准），
-  clipToPadding=false → 内容滚到顶栏底下被遮住，与普通 Toolbar 行为相同。
+  Material 3 设备首页：大卡片、宽松间距、清晰层级
+  覆盖式顶栏 + 下拉刷新 + 设备卡/快捷功能网格
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
-    <!-- 下拉刷新连接状态 -->
+    <!-- 下拉刷新 -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
@@ -23,6 +19,7 @@
             android:id="@+id/scrollContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:fillViewport="true"
             android:scrollbars="none">
 
@@ -48,52 +45,59 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/NlCard"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_card"
-                            android:orientation="vertical"
-                            android:padding="16dp">
+                            android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:orientation="vertical"
+                                android:padding="20dp">
 
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:contentDescription="WiFi AP"
-                                    android:src="@drawable/ic_wifi_ap"
-                                    app:tint="@color/text_primary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_icon_circle"
+                                        android:contentDescription="WiFi AP"
+                                        android:padding="5dp"
+                                        android:src="@drawable/ic_wifi_ap"
+                                        app:tint="?attr/colorPrimary" />
+
+                                    <TextView
+                                        style="@style/NlText.SectionTitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="WiFi AP 直连教程" />
+                                </LinearLayout>
 
                                 <TextView
-                                    style="@style/NlText.SectionTitle"
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/tvApGuide"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
-                                    android:text="WiFi AP 直连教程" />
+                                    android:layout_marginTop="12dp"
+                                    android:lineSpacingExtra="4dp"
+                                    android:text="① 相机开启 WiFi 热点（AP 模式），密码见相机屏幕\n② 手机 WLAN 连上相机热点\n③ 回到本页点「连接相机」\n④ 在相机配对画面按 OK 确认"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
                             </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tvApGuide"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:lineSpacingExtra="3dp"
-                                android:text="① 相机开启 WiFi 热点（AP 模式），密码见相机屏幕\n② 手机 WLAN 连上相机热点（记不记得连过都一样，直接进行下一步）\n③ 回到本页点「连接相机」即可 —— App 会直接连上热点，或自动弹出系统 Wi-Fi 面板让你点一下热点\n④ 在相机配对画面按 OK 确认\n热点模式不需要先点「扫描」，那一栏只用于多台相机里挑一台\n连不上时：确认相机热点已开启、手机没开 VPN"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <TextView
                             android:id="@+id/tvApCandidatesHeader"
                             style="@style/NlText.GroupTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="12dp"
                             android:text="已发现相机" />
 
                         <LinearLayout
@@ -111,19 +115,14 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <!-- v2.6.3：STA 架构分段切换（药丸）。
-                             原型与相册页底部 albumTabPill 完全一致：FrameLayout 底 + 指示器 View
-                             + 等宽 TextView 行，玻璃态下整枚药丸本身就是悬浮玻璃面
-                             （GlassTokens.tabPill），经典外观下退回 bg_chip 实心胶囊。
-                             选中态 = 黑底白字加粗（bg_chip_selected + on_primary），
-                             与相册页分页的视觉语言一致。 -->
+                        <!-- STA 架构分段切换 -->
                         <FrameLayout
                             android:id="@+id/staArchPill"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="12dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_chip"
-                            android:padding="3dp">
+                            android:padding="4dp">
 
                             <View
                                 android:id="@+id/staArchIndicator"
@@ -143,8 +142,8 @@
                                     android:layout_weight="1"
                                     android:gravity="center"
                                     android:text="PTP/IP 直连"
-                                    android:textColor="@color/on_primary"
-                                    android:textSize="13sp"
+                                    android:textColor="?attr/colorOnPrimaryContainer"
+                                    android:textSize="14sp"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -154,142 +153,145 @@
                                     android:layout_weight="1"
                                     android:gravity="center"
                                     android:text="FTP 推送收图"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="13sp" />
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
                             </LinearLayout>
                         </FrameLayout>
 
-                        <!-- 架构 A：PTP/IP 直连（原实现，逻辑零改动，仅被包进本容器） -->
+                        <!-- PTP/IP 直连 -->
                         <LinearLayout
                             android:id="@+id/layoutStaPtp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_card"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <LinearLayout
+                            <com.google.android.material.card.MaterialCardView
+                                style="@style/NlCard"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_height="wrap_content">
 
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:contentDescription="WiFi STA"
-                                    android:src="@drawable/ic_wifi_sta"
-                                    app:tint="@color/text_primary" />
-
-                                <TextView
-                                    style="@style/NlText.SectionTitle"
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
-                                    android:text="WiFi STA 连接教程" />
-                            </LinearLayout>
+                                    android:orientation="vertical"
+                                    android:padding="20dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <ImageView
+                                            android:layout_width="28dp"
+                                            android:layout_height="28dp"
+                                            android:background="@drawable/bg_icon_circle"
+                                            android:contentDescription="WiFi STA"
+                                            android:padding="5dp"
+                                            android:src="@drawable/ic_wifi_sta"
+                                            app:tint="?attr/colorPrimary" />
+
+                                        <TextView
+                                            style="@style/NlText.SectionTitle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="12dp"
+                                            android:text="WiFi STA 连接教程" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvStaGuide"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:lineSpacingExtra="4dp"
+                                        android:text="首次使用先注册一次...\n日常连接：手机与相机连接同一个路由器后点「连接相机」"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        android:textSize="14sp" />
+
+                                    <!-- STA 子模式切换 -->
+                                    <LinearLayout
+                                        android:id="@+id/staModeRow"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="16dp"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/chipStaSameWifi"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:background="@drawable/bg_chip_selected"
+                                            android:gravity="center"
+                                            android:paddingVertical="10dp"
+                                            android:text="同一 WiFi"
+                                            android:textColor="?attr/colorOnPrimaryContainer"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/chipStaHotspot"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="12dp"
+                                            android:layout_weight="1"
+                                            android:background="@drawable/bg_chip"
+                                            android:gravity="center"
+                                            android:paddingVertical="10dp"
+                                            android:text="连接手机热点"
+                                            android:textColor="?attr/colorOnSurface"
+                                            android:textSize="14sp" />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btnStaHostRegister"
+                                        style="@style/NlButton.Outline"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="48dp"
+                                        android:layout_marginTop="16dp"
+                                        android:text="STA 主机注册（让相机记住本机）" />
+
+                                    <TextView
+                                        android:id="@+id/tvStaHostRegStatus"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        android:textSize="13sp"
+                                        android:visibility="gone" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
 
                             <TextView
-                                android:id="@+id/tvStaGuide"
-                                android:layout_width="match_parent"
+                                style="@style/NlText.GroupTitle"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:lineSpacingExtra="3dp"
-                                android:text="首次使用先注册一次（之后不再需要）：\n  相机菜单 →「Wi-Fi连接（STA mode）」创建配置文件（旧固件在「连接至 PC」→ 网络设定里）。\n  向导连上网后会停在「正在等待连接」的画面 —— 注册必须在这一步做：\n  让手机与相机处于同一网络，回到本页点「STA 主机注册」，相机屏幕按 OK（约 10 秒）。\n  ⚠ 普通的「连接至智能设备」热点也能连上相机，但它不接受注册，点了报 0x201F。\n\n日常连接：\n  ① 手机与相机连接同一个路由器\n  ② 相机菜单进入「WiFi 连接（STA mode）」，选择该路由器，停在等待画面\n  ③ 点「扫描相机」自动发现 → 点「连接相机」\n搜不到相机时：确认手机没开 VPN、路由器没开 AP 隔离（两者都会挡掉设备发现）"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="12dp"
+                                android:text="最近连接设备" />
 
-                            <!-- v1.0.2 拆分：两种 STA 子模式（发现与路由策略不同） -->
                             <LinearLayout
-                                android:id="@+id/staModeRow"
+                                android:id="@+id/recentDeviceList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/chipStaSameWifi"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/bg_chip_selected"
-                                    android:gravity="center"
-                                    android:paddingVertical="8dp"
-                                    android:text="同一 WiFi"
-                                    android:textColor="@color/on_primary"
-                                    android:textSize="13sp" />
-
-                                <TextView
-                                    android:id="@+id/chipStaHotspot"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/bg_chip"
-                                    android:gravity="center"
-                                    android:paddingVertical="8dp"
-                                    android:text="连接手机热点"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-
-                            <!-- STA 主机注册：常驻入口。相机未记住本机时用强调色显示 -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnStaHostRegister"
-                                style="@style/NlButton.Outline"
-                                android:layout_width="match_parent"
-                                android:layout_height="46dp"
-                                android:layout_marginTop="14dp"
-                                android:text="STA 主机注册（让相机记住本机）" />
+                                android:orientation="vertical" />
 
                             <TextView
-                                android:id="@+id/tvStaHostRegStatus"
+                                style="@style/NlText.GroupTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="12dp"
+                                android:text="已发现相机" />
+
+                            <LinearLayout
+                                android:id="@+id/staCandidateList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp"
-                                android:visibility="gone" />
+                                android:orientation="vertical" />
                         </LinearLayout>
 
-                        <TextView
-                            style="@style/NlText.GroupTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="最近连接设备" />
-
-                        <LinearLayout
-                            android:id="@+id/recentDeviceList"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-
-                        <TextView
-                            style="@style/NlText.GroupTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="已发现相机" />
-
-                        <LinearLayout
-                            android:id="@+id/staCandidateList"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-                        </LinearLayout><!-- /layoutStaPtp -->
-
-                        <!-- 架构 B：FTP 推送收图（PRD §4.5 备选架构）。
-                             相机主动把照片推给本机 FTP 服务器 —— **不需要主机注册**，
-                             因此绕开了 STA 门控。本容器与 layoutStaPtp 完全互斥，
-                             状态各自独立（见 DashboardViewModel.ftpState）。 -->
+                        <!-- FTP 推送收图 -->
                         <LinearLayout
                             android:id="@+id/layoutStaFtp"
                             android:layout_width="match_parent"
@@ -297,153 +299,165 @@
                             android:orientation="vertical"
                             android:visibility="gone">
 
-                            <LinearLayout
+                            <com.google.android.material.card.MaterialCardView
+                                style="@style/NlCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="20dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <ImageView
+                                            android:layout_width="28dp"
+                                            android:layout_height="28dp"
+                                            android:background="@drawable/bg_icon_circle"
+                                            android:contentDescription="FTP 推送"
+                                            android:padding="5dp"
+                                            android:src="@drawable/ic_wifi_sta"
+                                            app:tint="?attr/colorPrimary" />
+
+                                        <TextView
+                                            style="@style/NlText.SectionTitle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="12dp"
+                                            android:text="FTP 推送收图教程" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvFtpGuide"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:lineSpacingExtra="4dp"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <com.google.android.material.card.MaterialCardView
+                                style="@style/NlCard"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_card"
-                                android:orientation="vertical"
-                                android:padding="16dp">
+                                android:layout_marginTop="@dimen/module_gap">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:contentDescription="FTP 推送"
-                                        android:src="@drawable/ic_wifi_sta"
-                                        app:tint="@color/text_primary" />
+                                    android:orientation="vertical"
+                                    android:padding="20dp">
 
                                     <TextView
-                                        style="@style/NlText.SectionTitle"
+                                        style="@style/NlText.Subtitle"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="10dp"
-                                        android:text="FTP 推送收图教程" />
+                                        android:text="本机 FTP 服务器" />
+
+                                    <TextView
+                                        android:id="@+id/tvFtpState"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvFtpEndpoint"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:textColor="?attr/colorOnSurface"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="用户名"
+                                            android:textColor="?attr/colorOnSurfaceVariant"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/tvFtpUser"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="?attr/colorOnSurface"
+                                            android:textSize="14sp" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="密码"
+                                            android:textColor="?attr/colorOnSurfaceVariant"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/tvFtpPass"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="?attr/colorOnSurface"
+                                            android:textSize="14sp" />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btnFtpToggle"
+                                        style="@style/NlButton.Primary"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="48dp"
+                                        android:layout_marginTop="16dp"
+                                        android:text="启动 FTP 服务器" />
+
+                                    <TextView
+                                        android:id="@+id/tvFtpHint"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        android:textSize="13sp"
+                                        android:visibility="gone" />
+
+                                    <TextView
+                                        android:id="@+id/tvFtpStats"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:textColor="?attr/colorOnSurface"
+                                        android:textSize="14sp"
+                                        android:visibility="gone" />
+
+                                    <LinearLayout
+                                        android:id="@+id/ftpLogList"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        android:orientation="vertical" />
                                 </LinearLayout>
-
-                                <TextView
-                                    android:id="@+id/tvFtpGuide"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:lineSpacingExtra="3dp"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/module_gap"
-                                android:background="@drawable/bg_card"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    style="@style/NlText.Subtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="本机 FTP 服务器" />
-
-                                <TextView
-                                    android:id="@+id/tvFtpState"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="13sp" />
-
-                                <TextView
-                                    android:id="@+id/tvFtpEndpoint"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold" />
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="用户名"
-                                        android:textColor="@color/text_secondary"
-                                        android:textSize="13sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvFtpUser"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/text_primary"
-                                        android:textSize="13sp" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="6dp"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="密码"
-                                        android:textColor="@color/text_secondary"
-                                        android:textSize="13sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvFtpPass"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/text_primary"
-                                        android:textSize="13sp" />
-                                </LinearLayout>
-
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btnFtpToggle"
-                                    style="@style/NlButton.Primary"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="46dp"
-                                    android:layout_marginTop="14dp"
-                                    android:text="启动 FTP 服务器" />
-
-                                <TextView
-                                    android:id="@+id/tvFtpHint"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="13sp"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/tvFtpStats"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="13sp"
-                                    android:visibility="gone" />
-
-                                <LinearLayout
-                                    android:id="@+id/ftpLogList"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="6dp"
-                                    android:orientation="vertical" />
-                            </LinearLayout>
-                        </LinearLayout><!-- /layoutStaFtp -->
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <!-- USB 有线模式 -->
@@ -454,100 +468,113 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <LinearLayout
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/NlCard"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_card"
-                            android:orientation="vertical"
-                            android:padding="16dp">
+                            android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:orientation="vertical"
+                                android:padding="20dp">
 
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:contentDescription="USB"
-                                    android:src="@drawable/ic_usb"
-                                    app:tint="@color/text_primary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_icon_circle"
+                                        android:contentDescription="USB"
+                                        android:padding="5dp"
+                                        android:src="@drawable/ic_usb"
+                                        app:tint="?attr/colorPrimary" />
+
+                                    <TextView
+                                        style="@style/NlText.SectionTitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="USB 有线连接教程" />
+                                </LinearLayout>
 
                                 <TextView
-                                    style="@style/NlText.SectionTitle"
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/tvUsbGuide"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
-                                    android:text="USB 有线连接教程" />
+                                    android:layout_marginTop="12dp"
+                                    android:lineSpacingExtra="4dp"
+                                    android:text="① 准备支持数据传输的 C to C 线\n② 相机 USB 设置为 MTP / PTP\n③ 连接后点「连接相机」"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/tvUsbDevice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp"
+                                    android:text="未检测到 USB 相机"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="13sp" />
                             </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tvUsbGuide"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:lineSpacingExtra="3dp"
-                                android:text="① 准备一根支持数据传输的 C to C 线（很多充电线不传数据，插上没反应多半是线的问题）\n② 相机 USB 设置里把模式设为 MTP / PTP\n③ 用线连接手机与相机，点「连接相机」，在系统弹窗里允许访问 USB 设备"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
-
-                            <TextView
-                                android:id="@+id/tvUsbDevice"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="未检测到 USB 相机"
-                                android:textColor="@color/text_tertiary"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 扫描 / 连接 并列操作容器 -->
-                <LinearLayout
-                    android:id="@+id/actionContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/group_gap"
-                    android:background="@drawable/bg_card"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnModeScan"
-                        style="@style/NlButton.Outline"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        android:text="扫描相机" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnModeConnect"
-                        style="@style/NlButton.Primary"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        android:text="连接相机" />
-                </LinearLayout>
-
-                <!-- 设备核心卡片（页面视觉中心） -->
+                <!-- 扫描 / 连接 操作区 -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardDevice"
+                    android:id="@+id/actionContainer"
                     style="@style/NlCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/module_gap"
+                    android:layout_marginTop="@dimen/module_gap">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnModeScan"
+                            style="@style/NlButton.Outline"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="扫描相机" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnModeConnect"
+                            style="@style/NlButton.Primary"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="连接相机" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- 设备核心卡片 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/module_gap_large"
                     app:cardBackgroundColor="@color/dark_card"
-                    app:strokeColor="@color/dark_card_surface">
+                    app:cardCornerRadius="@dimen/card_radius_large"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="24dp">
 
                         <!-- 连接状态行 -->
                         <LinearLayout
@@ -558,24 +585,24 @@
 
                             <View
                                 android:id="@+id/viewStatusIndicator"
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
                                 android:background="@drawable/bg_status_dot" />
 
                             <TextView
                                 android:id="@+id/tvConnectionStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="10dp"
                                 android:text="未连接"
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="13sp" />
+                                android:textSize="14sp" />
 
                             <ProgressBar
                                 android:id="@+id/progressConnecting"
-                                android:layout_width="14dp"
-                                android:layout_height="14dp"
-                                android:layout_marginStart="8dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginStart="10dp"
                                 android:indeterminateTint="@color/on_dark_card_variant"
                                 android:visibility="gone" />
 
@@ -592,35 +619,35 @@
                                 android:maxWidth="160dp"
                                 android:maxLines="1"
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="12sp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
-                        <!-- 相机全称 -->
+                        <!-- 相机名称 -->
                         <TextView
                             android:id="@+id/tvCameraName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
+                            android:layout_marginTop="16dp"
                             android:ellipsize="end"
-                            android:fontFamily="sans-serif-black"
+                            android:fontFamily="sans-serif-medium"
                             android:maxLines="1"
                             android:text="Nikon"
                             android:textColor="@color/on_dark_card"
-                            android:textSize="24sp" />
+                            android:textSize="28sp" />
 
                         <!-- 电池 -->
                         <LinearLayout
                             android:id="@+id/rowBattery"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
+                            android:layout_marginTop="20dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:contentDescription="电池"
                                 android:src="@drawable/ic_battery"
                                 app:tint="@color/on_dark_card_variant" />
@@ -628,11 +655,11 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="10dp"
                                 android:layout_weight="1"
                                 android:text="电池电量"
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="13sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvBattery"
@@ -640,7 +667,7 @@
                                 android:layout_height="wrap_content"
                                 android:text=""
                                 android:textColor="@color/on_dark_card"
-                                android:textSize="13sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -649,14 +676,14 @@
                             android:id="@+id/rowStorage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="12dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:contentDescription="存储"
                                 android:src="@drawable/ic_sd_card"
                                 app:tint="@color/on_dark_card_variant" />
@@ -664,17 +691,17 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="10dp"
                                 android:text="存储卡"
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="13sp" />
+                                android:textSize="14sp" />
 
                             <ProgressBar
                                 android:id="@+id/pbStorage"
                                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
-                                android:layout_marginHorizontal="10dp"
+                                android:layout_marginHorizontal="12dp"
                                 android:layout_weight="1"
                                 android:max="100"
                                 android:progress="0"
@@ -690,7 +717,7 @@
                                 android:maxWidth="176dp"
                                 android:text=""
                                 android:textColor="@color/on_dark_card"
-                                android:textSize="13sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -699,14 +726,14 @@
                             android:id="@+id/rowShotsRemaining"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="12dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:contentDescription="剩余可拍"
                                 android:src="@drawable/ic_nav_camera"
                                 app:tint="@color/on_dark_card_variant" />
@@ -714,11 +741,11 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="10dp"
                                 android:layout_weight="1"
                                 android:text="剩余可拍摄"
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="13sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvShotsRemaining"
@@ -726,7 +753,7 @@
                                 android:layout_height="wrap_content"
                                 android:text=""
                                 android:textColor="@color/on_dark_card"
-                                android:textSize="13sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -735,14 +762,14 @@
                             android:id="@+id/rowLens"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
+                            android:layout_marginTop="16dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:contentDescription="镜头"
                                 android:src="@drawable/ic_lens"
                                 app:tint="@color/on_dark_card_variant" />
@@ -751,12 +778,12 @@
                                 android:id="@+id/tvLens"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="10dp"
                                 android:ellipsize="end"
                                 android:maxLines="1"
                                 android:text=""
                                 android:textColor="@color/on_dark_card_variant"
-                                android:textSize="12sp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
                         <!-- 连接 / 断开按钮 -->
@@ -764,8 +791,8 @@
                             android:id="@+id/btnConnect"
                             style="@style/NlButton.Contrast"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="18dp"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="20dp"
                             android:text="连接相机"
                             android:visibility="gone" />
 
@@ -773,8 +800,8 @@
                             android:id="@+id/btnDisconnect"
                             style="@style/NlButton.ContrastOutline"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="18dp"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="20dp"
                             android:text="断开连接"
                             android:visibility="gone" />
                     </LinearLayout>
@@ -787,298 +814,316 @@
                     android:layout_marginTop="@dimen/module_gap_large"
                     android:columnCount="2">
 
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardQuickRemote"
+                        style="@style/NlCard"
                         android:layout_width="0dp"
-                        android:layout_height="96dp"
+                        android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_card"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="20dp">
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:contentDescription="遥控拍摄"
-                            android:src="@drawable/ic_nav_camera"
-                            app:tint="@color/text_primary" />
-
-                        <TextView
-                            style="@style/NlText.Subtitle"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="遥控拍摄" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="24dp">
 
-                    <LinearLayout
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="遥控拍摄"
+                                android:src="@drawable/ic_nav_camera"
+                                app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                style="@style/NlText.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="遥控拍摄" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardQuickAlbum"
+                        style="@style/NlCard"
                         android:layout_width="0dp"
-                        android:layout_height="96dp"
+                        android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_card"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="20dp">
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:contentDescription="查看相册"
-                            android:src="@drawable/ic_nav_album"
-                            app:tint="@color/text_primary" />
-
-                        <TextView
-                            style="@style/NlText.Subtitle"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="查看相册" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="24dp">
 
-                    <LinearLayout
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="查看相册"
+                                android:src="@drawable/ic_nav_album"
+                                app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                style="@style/NlText.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="查看相册" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardWifiSpeed"
+                        style="@style/NlCard"
                         android:layout_width="0dp"
-                        android:layout_height="96dp"
+                        android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_card"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="20dp">
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:id="@+id/ivWifiBandCard"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:contentDescription="WiFi 频段"
-                            android:src="@drawable/ic_wifi_sta"
-                            app:tint="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/tvWifiBandCard"
-                            style="@style/NlText.Subtitle"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="WiFi 频段" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="24dp">
 
-                    <LinearLayout
+                            <ImageView
+                                android:id="@+id/ivWifiBandCard"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="WiFi 频段"
+                                android:src="@drawable/ic_wifi_sta"
+                                app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                android:id="@+id/tvWifiBandCard"
+                                style="@style/NlText.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="WiFi 频段" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardQuickSettings"
+                        style="@style/NlCard"
                         android:layout_width="0dp"
-                        android:layout_height="96dp"
+                        android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_card"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="20dp">
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:contentDescription="传输设置"
-                            android:src="@drawable/ic_nav_settings"
-                            app:tint="@color/text_primary" />
-
-                        <TextView
-                            style="@style/NlText.Subtitle"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="传输设置" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="24dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="传输设置"
+                                android:src="@drawable/ic_nav_settings"
+                                app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                style="@style/NlText.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="传输设置" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
                 </GridLayout>
 
                 <!-- 相机详情折叠组 -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/NlCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/module_gap"
-                    android:background="@drawable/bg_card"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/module_gap">
 
                     <LinearLayout
-                        android:id="@+id/rowDetailHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="20dp">
-
-                        <TextView
-                            style="@style/NlText.SectionTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="相机详情" />
-
-                        <ImageView
-                            android:id="@+id/iconDetailChevron"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="展开"
-                            android:src="@drawable/ic_chevron_down"
-                            app:tint="@color/text_tertiary" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layoutDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingHorizontal="20dp"
-                        android:paddingBottom="16dp"
-                        android:visibility="gone">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/divider_height"
-                            android:background="@color/divider" />
+                        android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/rowShutterCount"
+                            android:id="@+id/rowDetailHeader"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="56dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:paddingHorizontal="20dp">
 
                             <TextView
+                                style="@style/NlText.SectionTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="快门次数"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                                android:text="相机详情" />
 
-                            <TextView
-                                android:id="@+id/tvShutterCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp" />
+                            <ImageView
+                                android:id="@+id/iconDetailChevron"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="展开"
+                                android:src="@drawable/ic_chevron_down"
+                                app:tint="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/rowFirmware"
+                            android:id="@+id/layoutDetail"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="20dp"
+                            android:paddingBottom="20dp"
                             android:visibility="gone">
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="固件版本"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                            <LinearLayout
+                                android:id="@+id/rowShutterCount"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/tvFirmware"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="快门次数"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/rowBleSignal"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                                <TextView
+                                    android:id="@+id/tvShutterCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="蓝牙信号"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                            <LinearLayout
+                                android:id="@+id/rowFirmware"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/tvBleSignal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="固件版本"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/rowWifiBand"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                                <TextView
+                                    android:id="@+id/tvFirmware"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="WiFi 频段"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                            <LinearLayout
+                                android:id="@+id/rowBleSignal"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/tvWifiBand"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="蓝牙信号"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/tvBleSignal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="重连次数"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                            <LinearLayout
+                                android:id="@+id/rowWifiBand"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/tvReconnectCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0 次"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="WiFi 频段"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/tvWifiBand"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="重连次数"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/tvReconnectCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0 次"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- 覆盖式顶栏：原先竖向排列的三件 chrome 整体搬到滚动区之上。
-         底色与几何来自 NlTopChrome / NlTopBar / NlTopDivider（三页共用，一处改全局生效）-->
+    <!-- 顶栏 -->
     <LinearLayout
         android:id="@+id/topChrome"
         style="@style/NlTopChrome">
 
-        <!-- 顶部导航：标题 + 设置入口，底部 1px 分割线 -->
         <LinearLayout
             android:id="@+id/topBar"
             style="@style/NlTopBar">
@@ -1099,75 +1144,75 @@
                 android:contentDescription="设置"
                 android:padding="12dp"
                 android:src="@drawable/ic_nav_settings"
-                app:tint="@color/text_primary" />
+                app:tint="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
         <View
             android:id="@+id/topDivider"
             style="@style/NlTopDivider" />
 
-    <!-- 顶部连接模式选择：药丸滑动 Tab -->
-    <LinearLayout
-        android:id="@+id/modeTabSection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/page_margin"
-        android:paddingTop="14dp"
-        android:paddingBottom="10dp">
-
-        <FrameLayout
-            android:id="@+id/modeTabContainer"
+        <!-- 连接模式选择 -->
+        <LinearLayout
+            android:id="@+id/modeTabSection"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_chip"
-            android:padding="3dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/page_margin"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp">
 
-            <View
-                android:id="@+id/modeTabIndicator"
-                android:layout_width="112dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="start|center_vertical"
-                android:background="@drawable/bg_chip_selected" />
-
-            <LinearLayout
-                android:id="@+id/modeTabs"
+            <FrameLayout
+                android:id="@+id/modeTabContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="48dp"
+                android:background="@drawable/bg_chip"
+                android:padding="4dp">
 
-                <TextView
-                    android:id="@+id/tabWifiAp"
-                    android:layout_width="0dp"
+                <View
+                    android:id="@+id/modeTabIndicator"
+                    android:layout_width="112dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="WiFi AP 连接"
-                    android:textColor="@color/on_primary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="start|center_vertical"
+                    android:background="@drawable/bg_chip_selected" />
 
-                <TextView
-                    android:id="@+id/tabWifiSta"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/modeTabs"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="WiFi STA 连接"
-                    android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tabUsb"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="USB 有线连接"
-                    android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tabWifiAp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="WiFi AP"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tabWifiSta"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="WiFi STA"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tabUsb"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="USB 有线"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

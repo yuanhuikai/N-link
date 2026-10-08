@@ -1,75 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 黑白双色设计系统 · 通用组件样式 -->
+<!--
+  Material 3 设计系统 · 组件样式
+  大圆角、更宽松的间距、清晰的层级
+-->
 <resources>
-    <!-- 排版层级：大标题 700 / 模块标题 700 / 次级标题 700 / 正文 400 / 辅助 400 -->
-    <style name="NlText.Title" parent="TextAppearance.Material3.TitleLarge">
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         排版层级
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <style name="NlText" parent="TextAppearance.Material3.BodyMedium" />
+
+    <style name="NlText.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="NlText.SectionTitle">
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
+    <style name="NlText.SectionTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="NlText.Subtitle">
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
+    <style name="NlText.Subtitle" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="NlText.GroupTitle">
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
+    <style name="NlText.GroupTitle" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
-    <!-- 排版基类：NlText.* 子样式通过点号隐含继承本样式，不可删除 -->
-    <style name="NlText" parent="TextAppearance.Material3.BodyMedium" />
+    <style name="NlText.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 
-    <!-- 主按钮：**尼康黄填充 + 黑字**（v2.6.5 品牌强调色的两处用途之一）。
-         黑白灰体系里主按钮原本是纯黑填充，与"对比卡片"（也是黑底白字）撞在同一层级，
-         屏幕上一个黑色大块到底是"可点的行动点"还是"一块信息卡"读不出来。
-         换成黄底之后行动点一眼可辨，且黄是全局唯一的彩色，不会与任何状态色混淆。
-         文字必须用黑（on_nikon_yellow）：白字在 #FFE100 上只有约 1.5:1 对比度。
-         `stateListAnimator @null` **保留** —— 按压反馈归 PressEffect 统一管（0.95 缩放），
-         不能让 Material 的抬升动画来抢（PRD §2.3 D1）。 -->
+    <style name="NlText.BodySecondary" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="NlText.Label" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         按钮样式
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 主要按钮：填充样式 -->
     <style name="NlButton.Primary" parent="Widget.Material3.Button">
-        <item name="android:textColor">@color/on_nikon_yellow</item>
-        <item name="backgroundTint">@color/nikon_yellow</item>
-        <item name="cornerRadius">8dp</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="cornerRadius">16dp</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">2dp</item>
-        <item name="android:outlineSpotShadowColor">@color/glass_shadow_key</item>
-        <item name="android:outlineAmbientShadowColor">@color/glass_shadow_ambient</item>
     </style>
 
-    <!-- 次要按钮：极细灰描边。刻意**不加** elevation ——
-         填充=浮起、描边=贴平，这层差别就是主次行动点的区分手段 -->
+    <!-- Tonal 按钮：次要强调 -->
+    <style name="NlButton.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">?attr/colorSecondaryContainer</item>
+        <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <!-- 描边按钮：次要操作 -->
     <style name="NlButton.Outline" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="strokeColor">@color/outline</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="strokeColor">?attr/colorOutline</item>
         <item name="strokeWidth">1dp</item>
-        <item name="cornerRadius">8dp</item>
+        <item name="cornerRadius">16dp</item>
         <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <!-- 高对比主面板按钮：面板内反色填充，深浅色自动跟随 -->
+    <!-- 文字按钮 -->
+    <style name="NlButton.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- 对比按钮（用于深色卡片内） -->
     <style name="NlButton.Contrast" parent="NlButton.Primary">
         <item name="backgroundTint">@color/dark_card_inner</item>
         <item name="android:textColor">@color/on_dark_card</item>
@@ -78,25 +100,21 @@
     <style name="NlButton.ContrastOutline" parent="NlButton.Outline">
         <item name="android:textColor">@color/on_dark_card</item>
         <item name="strokeColor">@color/on_dark_card_variant</item>
-        <item name="strokeWidth">1dp</item>
     </style>
 
-    <!-- ===== 顶栏统一几何（M2 的可行部分）=====
-         三页顶栏抽成 style 而不是 <include> 组件：三个顶栏的**操作区各不相同**
-         （设置页只有标题、设备页一个设置键、相册页三个键），做通用 slot 得把按钮改成代码
-         动态塞进容器，那比现在的重复更贵。M2 真正要的是"一处改全局生效"，
-         几何/配色收进 style 就够了。 -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         顶栏样式
+         ═══════════════════════════════════════════════════════════════════════ -->
     <style name="NlTopChrome">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
-        <!-- 覆盖在滚动区之上，必须自己带底；否则内容会从标题行与模式行之间透出来 -->
-        <item name="android:background">@color/background</item>
+        <item name="android:background">?attr/colorSurface</item>
     </style>
 
     <style name="NlTopBar">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_height">64dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingHorizontal">@dimen/page_margin</item>
@@ -104,23 +122,74 @@
 
     <style name="NlTopDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/divider_height</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <!-- 内容卡片：1px 极细灰边框，无阴影，12px 圆角 -->
-    <style name="NlCard" parent="Widget.Material3.CardView.Outlined">
-        <item name="cardBackgroundColor">@color/surface</item>
-        <item name="cardCornerRadius">12dp</item>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         卡片样式
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 内容卡片：填充式，无边框 -->
+    <style name="NlCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainerLow</item>
+        <item name="cardCornerRadius">20dp</item>
         <item name="cardElevation">0dp</item>
-        <item name="strokeColor">@color/outline</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!-- 描边卡片 -->
+    <style name="NlCard.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
-    <!-- 滚轮选择器黑白主题 -->
+    <!-- 滚轮选择器 -->
     <style name="NlPicker">
-        <item name="colorControlNormal">@color/outline</item>
-        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="colorControlNormal">?attr/colorOutline</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         设置项样式
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <style name="NlSettingsItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         导航栏样式（Material 3 NavigationBar 风格）
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <style name="NlNavItem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingVertical">8dp</item>
+    </style>
+
+    <style name="NlNavItem.Icon">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="NlNavItem.Label">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 </resources>

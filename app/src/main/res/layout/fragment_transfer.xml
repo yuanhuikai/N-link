@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tab2 相机照片：顶部导航 + 分类标签 + 相机/本地双标签 + 影像网格 + 多选悬浮操作栏 -->
+<!--
+  Material 3 相机照片：顶部导航 + 分类标签 + 影像网格
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
-    <!-- 顶部导航：标题 + 筛选 + 多选。几何来自 NlTopBar（三页共用）；
-         宽度 0dp + 约束是本页 ConstraintLayout 的需要，覆盖 style 里的 match_parent -->
+    <!-- 顶部导航 -->
     <LinearLayout
         android:id="@+id/topBar"
         style="@style/NlTopBar"
         android:layout_width="0dp"
-        android:background="@color/background"
+        android:background="?attr/colorSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- 标题自动缩放（v2.6.3 修复「标题栏显示不全」）：
-             本页顶栏是三页里控件最多的 —— 跳过已下载(48) + 刷新(48) + 排序(minWidth) +
-             多选，尾部落到 242dp，加 page_margin 48dp 后 360dp 屏上标题只剩 ~70dp，
-             而 24sp 的「相机照片」要 ~96dp → 只能显示两个字。
-             autoSize 让标题在 24sp→16sp 之间缩，宽了就完整显示、实在放不下才退回省略号。
-             设备页/设置页控件少、空间充裕，保持固定 24sp 不动（本页单独改，不进共享 style）。 -->
         <TextView
             android:id="@+id/tvTitle"
             style="@style/NlText.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="16sp"
             android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMinTextSize="16sp"
             android:autoSizeStepGranularity="1sp"
-            android:text="相机照片" />
+            android:autoSizeTextType="uniform"
+            android:text="相册" />
 
-        <!-- 模块 4.2：「跳过已下载」开关。XML 注释写的"仅已标记栏可见"已过时 ——
-             v1.3.0 需求 2 把它扩到了相机照片源（见 renderSkipDownloadedChip），
-             正是这次标题被挤没的直接原因。置于刷新键左侧 -->
         <ImageView
             android:id="@+id/btnSkipDownloaded"
             android:layout_width="48dp"
@@ -47,7 +39,7 @@
             android:padding="12dp"
             android:src="@drawable/ic_skip_downloaded"
             android:visibility="gone"
-            app:tint="@color/text_primary" />
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <ImageView
             android:id="@+id/btnRefresh"
@@ -57,33 +49,33 @@
             android:contentDescription="刷新"
             android:padding="12dp"
             android:src="@drawable/ic_refresh"
-            app:tint="@color/text_primary" />
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/btnSort"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="36dp"
             android:layout_marginStart="8dp"
-            android:minWidth="64dp"
             android:background="@drawable/bg_chip"
-            android:contentDescription="选择相册排序方式（拍摄时间 / 文件类型，升序或降序）"
+            android:contentDescription="选择相册排序方式"
             android:gravity="center"
-            android:paddingHorizontal="12dp"
+            android:minWidth="64dp"
+            android:paddingHorizontal="14dp"
             android:text="时间 ↓"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/btnMultiSelect"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginStart="8dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/bg_chip"
             android:gravity="center"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="14dp"
             android:text="多选"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View
@@ -94,14 +86,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar" />
 
-    <!-- 分类标签栏：横向滚动胶囊 -->
+    <!-- 分类标签栏 -->
     <HorizontalScrollView
         android:id="@+id/chipScroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingVertical="10dp"
         android:paddingHorizontal="@dimen/page_margin"
+        android:paddingVertical="12dp"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,39 +106,36 @@
             android:orientation="horizontal" />
     </HorizontalScrollView>
 
-    <!-- O2：剩余下载进度（已下载 M/N · 剩余 K 张）——仅相机照片源可见。
-         放在 chip 行下方、下载进度条上方，纵向线性约束，不与任何控件重叠。
-         注意：不能挂在 tvMessage 上——它在 layoutEmpty 空态内，列表非空时整个空态都是 GONE。 -->
+    <!-- 下载进度 -->
     <TextView
         android:id="@+id/tvDownloadStats"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center_vertical|start"
+        android:layout_height="44dp"
         android:layout_marginHorizontal="@dimen/page_margin"
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp"
+        android:gravity="center_vertical|start"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chipScroll" />
 
-    <!-- 下载确定进度条（0-100%） -->
     <ProgressBar
         android:id="@+id/progressDownload"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="3dp"
+        android:layout_height="4dp"
         android:layout_marginHorizontal="@dimen/page_margin"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/text_primary"
-        android:progressBackgroundTint="@color/outline"
+        android:progressTint="?attr/colorPrimary"
+        android:progressBackgroundTint="?attr/colorOutlineVariant"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvDownloadStats" />
 
-    <!-- 下拉刷新容器 + 影像网格：3 列等宽方形 -->
+    <!-- 下拉刷新 + 影像网格 -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
@@ -166,11 +155,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingHorizontal="2dp"
-                android:paddingBottom="12dp"
+                android:paddingHorizontal="4dp"
+                android:paddingBottom="16dp"
                 android:scrollbars="none" />
 
-            <!-- 空状态 / 加载提示 -->
+            <!-- 空状态 -->
             <LinearLayout
                 android:id="@+id/layoutEmpty"
                 android:layout_width="wrap_content"
@@ -181,181 +170,175 @@
 
                 <ProgressBar
                     android:id="@+id/progressLoading"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:indeterminateTint="@color/text_secondary"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:indeterminateTint="?attr/colorPrimary"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tvMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:paddingHorizontal="40dp"
+                    android:paddingHorizontal="48dp"
                     android:text="连接相机后查看相册"
-                    android:textColor="@color/text_tertiary"
-                    android:textSize="13sp" />
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="15sp" />
             </LinearLayout>
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- 底部标签栏：相机照片 / 本地照片 -->
-        <LinearLayout
-            android:id="@+id/albumTabRow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+    <!-- 底部标签栏 -->
+    <LinearLayout
+        android:id="@+id/albumTabRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-            <!-- 模块 4.5：滑动指示器（选中胶囊随 Tab 切换平移动画 180ms）。
-                 玻璃态下这枚 40dp 药丸本身就是悬浮玻璃面（bg_chip 实心底让位给材质），
-                 经典外观下它还是那颗 #F0F0F0 胶囊。 -->
-            <FrameLayout
-                android:id="@+id/albumTabPill"
+        <FrameLayout
+            android:id="@+id/albumTabPill"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_chip"
+            android:padding="4dp">
+
+            <View
+                android:id="@+id/tabIndicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_chip_selected" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_chip"
-                android:padding="3dp">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <!-- 初始宽度 0dp：宽度由 renderAlbumTabs 按行宽/Tab 数运行时设置。
-                     旧值 match_parent 会在 Fragment 处于 hidden（GONE 不布局）时
-                     保持全宽黑胶囊，未选中 Tab 的黑字叠黑底不可见 →「只见 1 个 Tab」 -->
-                <View
-                    android:id="@+id/tabIndicator"
+                <TextView
+                    android:id="@+id/tabCameraPhotos"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_chip_selected" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="相机照片"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tabMarkedPhotos"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="已标记"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/tabCameraPhotos"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="相机照片"
-                        android:textColor="@color/on_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tabLocalPhotos"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="本地照片"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
 
-                    <!-- F1「已标记」独立分区：聚合跨卡跨日的标记照片，一键批量收片 -->
-                    <TextView
-                        android:id="@+id/tabMarkedPhotos"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="已标记"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/tabLocalPhotos"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="本地照片"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-
-    <!-- 底部悬浮操作栏（多选模式）：下载 / 删除 / 分享 / 全选 -->
-    <LinearLayout
+    <!-- 底部悬浮操作栏（多选模式） -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomBar"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_floating_bar"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toTopOf="@id/albumTabRow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/tvSelectedCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="18dp"
-            android:text="已选 0 项"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <!-- F1：标记/取消标记（切换语义：选中集全部已标 → 取消，否则 → 打标） -->
-        <TextView
-            android:id="@+id/btnMark"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="标记"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/tvSelectedCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="20dp"
+                android:text="已选 0 项"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btnSelectAll"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="全选"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/btnMark"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:text="标记"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/btnShare"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="分享"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:text="全选"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="删除"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:text="分享"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/btnDownload"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/bg_chip_selected"
-            android:gravity="center"
-            android:paddingHorizontal="16dp"
-            android:text="下载"
-            android:textColor="@color/on_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:text="删除"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownload"
+                style="@style/NlButton.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp"
+                android:text="下载" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

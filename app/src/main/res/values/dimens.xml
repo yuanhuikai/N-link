@@ -1,32 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 全局边距规范：页面左右 24dp，模块间距 16-24dp，组内间距 8-12dp -->
+<!--
+  Material 3 设计系统 · 尺寸规范
+  更大的圆角、更宽松的间距
+-->
 <resources>
-    <dimen name="page_margin">24dp</dimen>
+    <!-- 页面边距 -->
+    <dimen name="page_margin">20dp</dimen>
+    <dimen name="page_margin_large">24dp</dimen>
+
+    <!-- 模块间距 -->
     <dimen name="module_gap_large">24dp</dimen>
     <dimen name="module_gap">16dp</dimen>
     <dimen name="group_gap">12dp</dimen>
     <dimen name="group_gap_small">8dp</dimen>
-    <dimen name="card_radius">12dp</dimen>
-    <dimen name="divider_height">1dp</dimen>
 
-    <!-- 全屏监看 HUD 尺寸：三档圆角梯度 + 控件高度，取代原先散落在 layout 里的硬编码 -->
-    <dimen name="lv_radius_sm">8dp</dimen>
-    <dimen name="lv_radius_md">12dp</dimen>
-    <dimen name="lv_radius_lg">16dp</dimen>
+    <!-- Material 3 圆角（更大、更柔和） -->
+    <dimen name="card_radius">20dp</dimen>
+    <dimen name="card_radius_large">24dp</dimen>
+    <dimen name="card_radius_small">16dp</dimen>
+    <dimen name="chip_radius">12dp</dimen>
+    <dimen name="button_radius">16dp</dimen>
+    <dimen name="dialog_radius">28dp</dimen>
+
+    <!-- 分隔线（Material 3 风格：更少使用分隔线，使用空间分隔） -->
+    <dimen name="divider_height">0dp</dimen>
+
+    <!-- 导航栏 -->
+    <dimen name="nav_height">80dp</dimen>
+    <dimen name="nav_indicator_width">64dp</dimen>
+    <dimen name="nav_indicator_height">32dp</dimen>
+    <dimen name="nav_indicator_radius">16dp</dimen>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         全屏监看 HUD 尺寸（保持专业工具调性）
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <dimen name="lv_radius_sm">12dp</dimen>
+    <dimen name="lv_radius_md">16dp</dimen>
+    <dimen name="lv_radius_lg">20dp</dimen>
 
     <dimen name="lv_bar_h_padding">12dp</dimen>
     <dimen name="lv_bar_v_padding">8dp</dimen>
-    <dimen name="lv_cell_gap">4dp</dimen>
+    <dimen name="lv_cell_gap">6dp</dimen>
     <dimen name="lv_tool_h">58dp</dimen>
     <dimen name="lv_tool_h_land">50dp</dimen>
     <dimen name="lv_shutter">72dp</dimen>
     <dimen name="lv_shutter_inner">54dp</dimen>
-    <dimen name="lv_icon_btn">36dp</dimen>
-    <dimen name="lv_icon_btn_land">32dp</dimen>
+    <dimen name="lv_icon_btn">40dp</dimen>
+    <dimen name="lv_icon_btn_land">36dp</dimen>
     <dimen name="lv_graph_w">128dp</dimen>
     <dimen name="lv_graph_h">56dp</dimen>
-    <dimen name="lv_card_pad">10dp</dimen>
-    <dimen name="lv_sheet_pad_h">18dp</dimen>
-    <dimen name="lv_sheet_pad_top">14dp</dimen>
-    <dimen name="lv_sheet_pad_bottom">18dp</dimen>
+    <dimen name="lv_card_pad">12dp</dimen>
+    <dimen name="lv_sheet_pad_h">20dp</dimen>
+    <dimen name="lv_sheet_pad_top">16dp</dimen>
+    <dimen name="lv_sheet_pad_bottom">20dp</dimen>
 </resources>
