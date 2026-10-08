@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 诊断事件时间线页面 -->
+<!--
+  诊断事件时间线页面 - Material 3 风格
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
+        android:background="?attr/colorSurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -20,8 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnSurface"
             app:title="诊断事件"
-            app:titleTextColor="@color/text_primary" />
+            app:titleTextColor="?attr/colorOnSurface" />
 
         <!-- 筛选芯片 -->
         <HorizontalScrollView
@@ -77,14 +80,14 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:paddingBottom="8dp"
-            android:textColor="@color/text_tertiary"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp"
             tools:text="共 128 条 · 3 个错误 · 会话 a1b2c3d4" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:background="?attr/colorOutlineVariant" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -119,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="暂无诊断事件"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="16sp" />
 
         <TextView
@@ -127,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="连接相机或执行操作后会在这里显示"
-            android:textColor="@color/text_tertiary"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -137,10 +140,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/surface"
+        android:background="?attr/colorSurfaceContainer"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExport"
