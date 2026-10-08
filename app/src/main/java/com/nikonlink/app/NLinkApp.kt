@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.google.android.material.color.DynamicColors
 import com.nikonlink.app.device.service.ConnectionHealthWorker
 import com.nikonlink.app.shared.common.AppEventLogger
 import androidx.work.WorkManager
@@ -15,6 +16,7 @@ import javax.inject.Inject
 /**
  * N-Link Application 入口
  * PRD 4.2: Hilt DI, Timber logging
+ * Material 3: DynamicColors 支持（跟随系统壁纸主题色）
  */
 @HiltAndroidApp
 class NLinkApp : Application(), Configuration.Provider {
@@ -37,6 +39,8 @@ class NLinkApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        // Material You 动态颜色：Android 12+ 跟随壁纸主题色，低版本使用静态 fallback 主题
+        DynamicColors.applyToActivitiesIfAvailable(this)
         eventLogger.installCrashHandler()
         initLogging()
         createNotificationChannels()

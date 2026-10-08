@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 选中标签：黑底白字胶囊 -->
+<!-- Material 3 Chip 选中态：主色容器背景 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/primary" />
-    <corners android:radius="20dp" />
+    <solid android:color="@color/primary_container" />
+    <corners android:radius="@dimen/chip_radius" />
 </shape>

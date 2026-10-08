@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 主色实心圆（快门按钮/录制按钮底） -->
+<!-- Material 3 圆形主按钮（快门） -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@color/primary" />
+    <solid android:color="?attr/colorPrimary" />
 </shape>

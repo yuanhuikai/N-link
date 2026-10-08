@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tab3 遥控拍摄：实时监看(2/3) + 参数控制区(1/3) -->
+<!--
+  Material 3 遥控拍摄：实时监看(2/3) + 参数控制区(1/3)
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="?attr/colorSurface"
     android:orientation="vertical">
 
     <!-- 顶部：照片/视频模式切换 + 状态 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/page_margin">
 
-        <!--
-          照片/视频切换：FrameLayout 槽 + 背后的**滑动指示块**。
-          以前是"选中的那个 TextView 换实心底"，所以切换是硬切；
-          现在指示块是一枚真滑块，位移与宽度跟着目标标签走（GlassMotion.slidePill）。
-          经典外观下把它瞬间归位（不带动画），观感与 v2.2 一致。
-        -->
+        <!-- 照片/视频切换 -->
         <FrameLayout
             android:id="@+id/modeToggleSlot"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_chip"
-            android:padding="3dp">
+            android:padding="4dp">
 
             <View
                 android:id="@+id/modeIndicator"
@@ -39,28 +36,25 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <!-- 默认写未选中的字色：选中态的黑底胶囊要等运行时量到标签宽度才能落位
-                     （见 RemoteFragment.layoutModeIndicator），首帧底还不在，
-                     这里若写 on_primary 就是白字白底。真实状态由 renderModeToggle 立刻覆盖。 -->
                 <TextView
                     android:id="@+id/btnModePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:paddingHorizontal="18dp"
+                    android:paddingHorizontal="20dp"
                     android:text="照片"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/btnModeVideo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:paddingHorizontal="18dp"
+                    android:paddingHorizontal="20dp"
                     android:text="视频"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
             </LinearLayout>
         </FrameLayout>
 
@@ -69,30 +63,29 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- 画面模式下拉（v1.0.2 从长按菜单迁入）：收起显示当前模式，
-             展开显示带说明的选项（联动=相机屏同显 / 遥控=相机屏熄） -->
+        <!-- 画面模式下拉 -->
         <TextView
             android:id="@+id/chipDisplayMode"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="36dp"
             android:background="@drawable/bg_chip"
             android:gravity="center"
-            android:paddingHorizontal="14dp"
+            android:paddingHorizontal="16dp"
             android:text="联动画面 ▾"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tvRemoteStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
             android:text="未连接"
-            android:textColor="@color/text_tertiary"
-            android:textSize="12sp" />
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- 实时取景区域（占 2/3） -->
+    <!-- 实时取景区域 -->
     <FrameLayout
         android:id="@+id/liveContainer"
         android:layout_width="match_parent"
@@ -118,7 +111,7 @@
             android:src="@drawable/bg_grid_thirds"
             android:visibility="gone" />
 
-        <!-- 顶部悬浮信息：半透黑底白字 -->
+        <!-- 顶部悬浮信息 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,13 +119,13 @@
             android:background="@color/liveview_scrim"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp">
 
             <ImageView
                 android:id="@+id/ivLvBattery"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:contentDescription="电量"
                 android:src="@drawable/ic_battery"
                 app:tint="@color/liveview_text" />
@@ -144,13 +137,13 @@
                 android:layout_marginStart="4dp"
                 android:text=""
                 android:textColor="@color/liveview_text"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/ivLvShots"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginStart="14dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="16dp"
                 android:contentDescription="剩余"
                 android:src="@drawable/ic_sd_card"
                 app:tint="@color/liveview_text" />
@@ -162,7 +155,7 @@
                 android:layout_marginStart="4dp"
                 android:text=""
                 android:textColor="@color/liveview_text"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <View
                 android:layout_width="0dp"
@@ -175,21 +168,21 @@
                 android:layout_height="wrap_content"
                 android:text="未连接"
                 android:textColor="@color/liveview_text"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- 录制状态标识：实心圆点 + 时长（灰度，不引入彩色） -->
+        <!-- 录制状态 -->
         <LinearLayout
             android:id="@+id/layoutRecordBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="48dp"
             android:background="@color/liveview_scrim"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="5dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
             android:visibility="gone">
 
             <ImageView
@@ -203,14 +196,14 @@
                 android:id="@+id/tvRecordTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="8dp"
                 android:text="00:00"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- 触摸对焦点指示器（淡入淡出） -->
+        <!-- 触摸对焦点 -->
         <ImageView
             android:id="@+id/viewFocusIndicator"
             android:layout_width="56dp"
@@ -225,50 +218,50 @@
             android:id="@+id/btnStartLv"
             style="@style/NlButton.Primary"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:paddingHorizontal="28dp"
+            android:paddingHorizontal="32dp"
             android:text="开始监看" />
 
-        <!-- 横屏全屏监看入口 -->
+        <!-- 全屏入口 -->
         <ImageView
             android:id="@+id/btnFullscreenLv"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_gravity="top|end"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/bg_fullscreen_button"
             android:contentDescription="全屏监看"
-            android:padding="9dp"
+            android:padding="10dp"
             android:src="@drawable/ic_fullscreen"
             app:tint="@color/white" />
 
-        <!-- 亮度直方图开关（优化项 4）：与全屏按钮同规格，位于其左侧 -->
+        <!-- 直方图开关 -->
         <ImageView
             android:id="@+id/btnHistogram"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_gravity="top|end"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="54dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="58dp"
             android:background="@drawable/bg_fullscreen_button"
             android:contentDescription="@string/histogram_toggle"
-            android:padding="9dp"
+            android:padding="10dp"
             android:src="@drawable/ic_histogram"
             app:tint="@color/white" />
 
-        <!-- 实时亮度直方图（优化项 4）：贴取景区底部，随监看帧同步刷新 -->
+        <!-- 实时直方图 -->
         <com.nikonlink.app.camera.liveview.HistogramView
             android:id="@+id/viewHistogram"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="bottom"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="12dp"
             android:visibility="gone" />
 
-        <!-- 快门闪白反馈 -->
+        <!-- 快门闪白 -->
         <View
             android:id="@+id/viewFlash"
             android:layout_width="match_parent"
@@ -278,15 +271,15 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!-- 参数控制区（占 1/3） -->
+    <!-- 参数控制区 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingTop="10dp">
+        android:paddingTop="12dp">
 
-        <!-- 基础参数行：模式/光圈/快门/ISO/白平衡（点击弹出滚轮选择器） -->
+        <!-- 基础参数行 -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -301,7 +294,7 @@
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
-        <!-- 快门区：定时 | 快门 | 间隔/场景 -->
+        <!-- 快门区 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -312,82 +305,82 @@
 
             <FrameLayout
                 android:id="@+id/btnTimer"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
                 android:background="@drawable/bg_icon_circle">
 
                 <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:contentDescription="定时拍摄"
                     android:src="@drawable/ic_timer"
-                    app:tint="@color/text_primary" />
+                    app:tint="?attr/colorOnSurface" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/btnShutter"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:layout_marginHorizontal="36dp"
-                android:background="@drawable/bg_circle_primary">
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/bg_circle_primary"
+                android:contentDescription="拍照">
 
                 <ImageView
                     android:id="@+id/ivShutterIcon"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center"
                     android:contentDescription="快门"
                     android:src="@drawable/ic_shutter_white" />
             </FrameLayout>
 
-            <!-- 分体按钮：左侧主体单击执行当前模式；右侧箭头弹下拉切换模式
-                 （间隔拍摄 / B 门长曝光），取代旧「长按弹菜单 + 教程气泡」 -->
+            <!-- 拍摄模式按钮 -->
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_chip">
+                android:layout_height="44dp"
+                android:background="@drawable/bg_chip"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/btnModeAction"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="10dp"
                     android:text="间隔拍摄"
-                    android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/btnModeActionArrow"
-                    android:layout_width="26dp"
+                    android:layout_width="28dp"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="切换拍摄模式"
-                    android:padding="6dp"
+                    android:padding="7dp"
                     android:src="@drawable/ic_chevron_down"
-                    app:tint="@color/text_primary" />
+                    app:tint="?attr/colorOnSurface" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 底部信息行：拍摄计数 -->
+        <!-- 底部信息 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:paddingHorizontal="@dimen/page_margin"
-            android:paddingBottom="12dp">
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/tvShotCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已拍 0 张"
-                android:textColor="@color/text_tertiary"
-                android:textSize="12sp" />
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

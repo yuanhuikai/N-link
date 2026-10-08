@@ -360,17 +360,18 @@ class MainActivity : AppCompatActivity() {
         binding.root.postDelayed(recaptureDockBackdrop, DOCK_RECAPTURE_MS)
     }
 
-    /** 选中态：胶囊底 + 实心图标 + 加粗文字；未选中：线性图标 + 常规字重、无底 */
+    /** Material 3 导航栏选中态：胶囊指示器 + 实心图标 + 强调色标签 */
     private fun applyTabStyle(active: Int) {
         val activeColor = ContextCompat.getColor(this, R.color.nav_active_icon)
         val inactiveColor = ContextCompat.getColor(this, R.color.nav_inactive_icon)
+        val indicators = listOf(
+            binding.indicatorDashboard, binding.indicatorTransfer,
+            binding.indicatorRemote, binding.indicatorSettings
+        )
         for (i in tabViews.indices) {
             val selected = i == active
-            // 只靠"实心图标 + 加粗"区分选中，在悬浮玻璃上层级感不够（看起来像四个都能按
-            // 但不知道当前在哪个）；补一枚胶囊底，位置一眼可读，按压时它跟着一起缩放
-            tabViews[i].setBackgroundResource(
-                if (selected) R.drawable.bg_nav_selected else 0,
-            )
+            // Material 3 NavigationBar 风格：胶囊指示器 + 实心图标
+            indicators[i].visibility = if (selected) View.VISIBLE else View.INVISIBLE
             tabIcons[i].setImageResource(if (selected) iconsFilled[i] else iconsLine[i])
             tabIcons[i].setColorFilter(if (selected) activeColor else inactiveColor)
             tabLabels[i].setTextColor(if (selected) activeColor else inactiveColor)

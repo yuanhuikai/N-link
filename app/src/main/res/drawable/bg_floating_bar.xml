@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 底部悬浮操作栏：底色药丸 + 细边框 -->
+<!-- Material 3 悬浮操作栏：表面容器颜色，大圆角 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/surface" />
-    <stroke android:width="1dp" android:color="@color/outline" />
-    <corners android:radius="28dp" />
+    <solid android:color="?attr/colorSurfaceContainerHigh" />
+    <corners android:radius="@dimen/card_radius" />
 </shape>

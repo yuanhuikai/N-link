@@ -1,89 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 黑白双色设计系统 · 日间模式 -->
+<!--
+  Material 3 动态颜色设计系统
+  支持 Android 12+ 壁纸主题色提取；低版本设备使用下方静态 fallback 配色（青色系）
+-->
 <resources>
-    <!-- 背景层：纯白主背景，浅灰次级背景 -->
-    <color name="page">#FFFFFF</color>
-    <color name="background">#FFFFFF</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F5F5F5</color>
-    <color name="panel_2">#F5F5F5</color>
-    <color name="outline">#E4E4E4</color>
-    <color name="divider">#EBEBEB</color>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         Material 3 Fallback 色板（Teal/Cyan 青色系 - 专业相机工具调性）
+         DynamicColors 在 Android 12+ 生效时会自动覆盖这些值
+         ═══════════════════════════════════════════════════════════════════════ -->
 
-    <!-- 对比卡片（日间=纯黑底白字；夜间=纯白底黑字） -->
-    <color name="dark_card">#000000</color>
-    <color name="dark_card_inner">#1A1A1A</color>
-    <color name="dark_card_surface">#262626</color>
-    <color name="on_dark_card">#FFFFFF</color>
-    <color name="on_dark_card_variant">#A3A3A3</color>
+    <!-- Primary 色系 -->
+    <color name="md_theme_light_primary">#006A6A</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#9CF1F0</color>
+    <color name="md_theme_light_onPrimaryContainer">#002020</color>
 
-    <!-- 文字层：一级纯黑 / 二级深灰 / 辅助中灰 -->
-    <color name="text_primary">#000000</color>
-    <color name="text_secondary">#525252</color>
-    <color name="text_tertiary">#8C8C8C</color>
-    <color name="on_background">#000000</color>
-    <color name="on_surface">#000000</color>
-    <color name="on_surface_variant">#737373</color>
+    <!-- Secondary 色系 -->
+    <color name="md_theme_light_secondary">#4A6363</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#CCE8E7</color>
+    <color name="md_theme_light_onSecondaryContainer">#051F1F</color>
 
-    <!-- 组件层：主按钮/选中态纯黑填充 -->
-    <color name="primary">#000000</color>
-    <color name="primary_variant">#1A1A1A</color>
-    <color name="accent">#000000</color>
-    <color name="accent_soft">#F5F5F5</color>
-    <color name="on_primary">#FFFFFF</color>
+    <!-- Tertiary 色系 -->
+    <color name="md_theme_light_tertiary">#4B607C</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#D3E4FF</color>
+    <color name="md_theme_light_onTertiaryContainer">#041C35</color>
 
-    <color name="secondary">#262626</color>
-    <color name="secondary_variant">#404040</color>
-    <color name="on_secondary">#FFFFFF</color>
+    <!-- Error 色系 -->
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
 
-    <!-- 状态色：仅灰度表达（规范：除下方品牌强调色外不引入彩色） -->
-    <color name="status_disconnected">#BFBFBF</color>
-    <color name="ble_indicator">#525252</color>
-    <color name="wifi_indicator">#000000</color>
+    <!-- 背景与表面 -->
+    <color name="md_theme_light_background">#FAFDFC</color>
+    <color name="md_theme_light_onBackground">#191C1C</color>
+    <color name="md_theme_light_surface">#FAFDFC</color>
+    <color name="md_theme_light_onSurface">#191C1C</color>
+    <color name="md_theme_light_surfaceVariant">#DAE5E4</color>
+    <color name="md_theme_light_onSurfaceVariant">#3F4948</color>
 
-    <!-- ══════════════════════════════════════════════════════════════════
-         v2.6.5 品牌强调色（尼康黄）—— **唯一** 的彩色，且**只允许**用在两处：
-           ① 连接状态指示灯（status_connected）
-           ② 主功能按钮（NlButton.Primary 的填充）
-         其它任何控件、图标、文字、选中态一律继续走黑白灰。
-         这条约束是刻意收紧的：强调色一旦铺开就不再是强调，界面会重新变得嘈杂。
-         回退方式：把下面两个 token 改回 #000000/#FFFFFF 即可整体还原为纯黑白。
-         ══════════════════════════════════════════════════════════════════ -->
-    <color name="nikon_yellow">#FFE100</color>
-    <!-- 黄底上的文字/图标：必须用黑，白字在黄底上对比度不足（≈1.5:1） -->
-    <color name="on_nikon_yellow">#000000</color>
-    <!-- 连接状态指示灯·已连接 -->
-    <color name="status_connected">#FFE100</color>
+    <!-- Surface Container 层级（Material 3 elevation tones） -->
+    <color name="md_theme_light_surfaceContainerLowest">#FFFFFF</color>
+    <color name="md_theme_light_surfaceContainerLow">#F4F7F6</color>
+    <color name="md_theme_light_surfaceContainer">#EEF1F0</color>
+    <color name="md_theme_light_surfaceContainerHigh">#E8EBEA</color>
+    <color name="md_theme_light_surfaceContainerHighest">#E2E5E4</color>
 
-    <!-- 点击反馈 / 遮罩 -->
-    <color name="chip_unselected">#F0F0F0</color>
+    <!-- 边框与分隔 -->
+    <color name="md_theme_light_outline">#6F7978</color>
+    <color name="md_theme_light_outlineVariant">#BEC9C8</color>
 
-    <!-- Switch 开关：OFF 轨道中性灰（深浅色主题均可见），滑块白色内嵌 -->
-    <color name="switch_track_off">#8F8F8F</color>
+    <!-- 其他 -->
+    <color name="md_theme_light_inverseSurface">#2D3131</color>
+    <color name="md_theme_light_inverseOnSurface">#EFF1F0</color>
+    <color name="md_theme_light_inversePrimary">#80D5D4</color>
+    <color name="md_theme_light_scrim">#000000</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         语义色 token（用于代码/布局引用，DynamicColors 会自动映射）
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 背景层 -->
+    <color name="background">@color/md_theme_light_background</color>
+    <color name="surface">@color/md_theme_light_surface</color>
+    <color name="surface_variant">@color/md_theme_light_surfaceVariant</color>
+    <color name="surface_container">@color/md_theme_light_surfaceContainer</color>
+    <color name="surface_container_high">@color/md_theme_light_surfaceContainerHigh</color>
+    <color name="surface_container_low">@color/md_theme_light_surfaceContainerLow</color>
+
+    <!-- 主色 -->
+    <color name="primary">@color/md_theme_light_primary</color>
+    <color name="primary_variant">@color/md_theme_light_primaryContainer</color>
+    <color name="on_primary">@color/md_theme_light_onPrimary</color>
+    <color name="primary_container">@color/md_theme_light_primaryContainer</color>
+    <color name="on_primary_container">@color/md_theme_light_onPrimaryContainer</color>
+
+    <!-- 次要色 -->
+    <color name="secondary">@color/md_theme_light_secondary</color>
+    <color name="secondary_variant">@color/md_theme_light_secondaryContainer</color>
+    <color name="on_secondary">@color/md_theme_light_onSecondary</color>
+    <color name="secondary_container">@color/md_theme_light_secondaryContainer</color>
+    <color name="on_secondary_container">@color/md_theme_light_onSecondaryContainer</color>
+
+    <!-- 第三色 -->
+    <color name="tertiary">@color/md_theme_light_tertiary</color>
+    <color name="tertiary_container">@color/md_theme_light_tertiaryContainer</color>
+    <color name="on_tertiary">@color/md_theme_light_onTertiary</color>
+    <color name="on_tertiary_container">@color/md_theme_light_onTertiaryContainer</color>
+
+    <!-- 文字层 -->
+    <color name="text_primary">@color/md_theme_light_onSurface</color>
+    <color name="text_secondary">@color/md_theme_light_onSurfaceVariant</color>
+    <color name="text_tertiary">#6F7978</color>
+    <color name="on_background">@color/md_theme_light_onBackground</color>
+    <color name="on_surface">@color/md_theme_light_onSurface</color>
+    <color name="on_surface_variant">@color/md_theme_light_onSurfaceVariant</color>
+
+    <!-- 边框 -->
+    <color name="outline">@color/md_theme_light_outline</color>
+    <color name="outline_variant">@color/md_theme_light_outlineVariant</color>
+    <color name="divider">@color/md_theme_light_outlineVariant</color>
+
+    <!-- 错误状态 -->
+    <color name="error">@color/md_theme_light_error</color>
+    <color name="on_error">@color/md_theme_light_onError</color>
+    <color name="error_container">@color/md_theme_light_errorContainer</color>
+
+    <!-- 状态色 -->
+    <color name="status_connected">@color/md_theme_light_primary</color>
+    <color name="status_disconnected">#9CA3AF</color>
+
+    <!-- 强调色（兼容旧代码） -->
+    <color name="accent">@color/md_theme_light_primary</color>
+    <color name="accent_soft">@color/md_theme_light_primaryContainer</color>
+    <color name="panel_2">@color/md_theme_light_surfaceContainerLow</color>
+
+    <!-- Chip 组件 -->
+    <color name="chip_unselected">@color/md_theme_light_surfaceContainerHigh</color>
+    <color name="chip_selected">@color/md_theme_light_secondaryContainer</color>
+
+    <!-- Switch 开关 -->
+    <color name="switch_track_off">#79747E</color>
     <color name="switch_thumb_off">#FFFFFF</color>
 
-    <!-- Live View 专用 -->
+    <!-- 对比卡片（设备信息卡：深色背景以突出） -->
+    <color name="dark_card">@color/md_theme_light_inverseSurface</color>
+    <color name="dark_card_inner">#3D4545</color>
+    <color name="dark_card_surface">#4A5151</color>
+    <color name="on_dark_card">@color/md_theme_light_inverseOnSurface</color>
+    <color name="on_dark_card_variant">#A8AFAF</color>
+
+    <!-- 导航栏 -->
+    <color name="nav_background">@color/md_theme_light_surfaceContainer</color>
+    <color name="nav_selected_bg">@color/md_theme_light_secondaryContainer</color>
+    <color name="nav_active_icon">@color/md_theme_light_onSecondaryContainer</color>
+    <color name="nav_inactive_icon">@color/md_theme_light_onSurfaceVariant</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         Live View 专用色（保持深色高对比度，不受动态颜色影响）
+         ═══════════════════════════════════════════════════════════════════════ -->
     <color name="liveview_scrim">#99000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="liveview_text">#E6FFFFFF</color>
 
-    <!-- 全屏监看（专业监看工具通用范式）：纯黑底 + 灰阶层级 + 单一琥珀强调色。
-         强调色只承担「当前值 / 激活态」语义，全屏可见处不超过 4 个：
-         刻度尺游标、分段选中段、跟焦轮驱动位、监看中状态点。
-         其余层级一律用灰度，避免多色堆叠。 -->
-    <!-- 全屏监看（专业监看工具通用范式）：纯黑底 + 灰阶层级 + 单一强调色。
-         强调色只承担「当前值 / 激活态」语义，全屏可见处不超过 4 个：
-         刻度尺游标、分段选中段、跟焦轮驱动位、监看中状态点。
-         其余层级一律用灰度，避免多色堆叠。
-
-         色值直接引用品牌色 nikon_yellow（v2.6.5 规范）：监看页的取景画面亮度不可控，
-         选中态只用灰度会读不出来，因此这里是有意为之的例外（小万 2026-10-03 拍板）。
-         想让它彻底回归 §1.1 的「只两处」，把本行改成 @color/white 即可，无需动布局。 -->
-    <color name="lv_accent">@color/nikon_yellow</color>
-    <color name="lv_accent_soft">#26FFE100</color>
-    <!-- v2.7.2 玻璃下线：全部实体化。层次靠色阶（面板最暗 → 卡片居中 → 芯片最亮）
-         与 1dp 描边区分，不再靠透出画面 -->
+    <!-- 全屏监看：深色专业工具调性 -->
+    <color name="lv_accent">#80D5D4</color>
+    <color name="lv_accent_soft">#2680D5D4</color>
     <color name="lv_panel">#F5141416</color>
     <color name="lv_card">#F21B1B1D</color>
     <color name="lv_card_solid">#F21B1B1D</color>
@@ -96,10 +161,12 @@
     <color name="lv_seg_track">#1FFFFFFF</color>
     <color name="lv_seg_sel">#33FFFFFF</color>
 
-    <!-- 底部导航：背景与页面底色一致 -->
-    <color name="nav_background">#FFFFFF</color>
-    <!-- 选中项背后的胶囊：玻璃 dock 上用轻微下沉的暗色，实体 dock 上同样成立 -->
-    <color name="nav_selected_bg">#14000000</color>
-    <color name="nav_active_icon">#000000</color>
-    <color name="nav_inactive_icon">#9E9E9E</color>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         兼容旧代码的 token（逐步废弃）
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <color name="page">@color/background</color>
+    <color name="nikon_yellow">@color/md_theme_light_primary</color>
+    <color name="on_nikon_yellow">@color/md_theme_light_onPrimary</color>
+    <color name="ble_indicator">@color/text_secondary</color>
+    <color name="wifi_indicator">@color/text_primary</color>
 </resources>
