@@ -26,6 +26,7 @@ import com.nikonlink.app.camera.params.DigeekerShutterCountClient
 import com.nikonlink.app.camera.gallery.TransferManager
 import com.nikonlink.app.shared.common.AppEventLogger
 import com.nikonlink.app.shared.common.AppSettings
+import com.nikonlink.app.shared.diagnostics.DiagnosticsRepository
 import com.nikonlink.app.shared.update.UpdateChecker
 import dagger.Module
 import dagger.Provides
@@ -96,7 +97,8 @@ object AppModule {
         funnel: com.nikonlink.app.device.connect.ConnFunnel,
         preflight: com.nikonlink.app.device.connect.PreflightGate,
         staHostRegistrar: com.nikonlink.app.device.wifi_sta.StaHostRegistrar,
-        wifiDropWatcher: com.nikonlink.app.device.wifi_sta.WifiDropReasonWatcher
+        wifiDropWatcher: com.nikonlink.app.device.wifi_sta.WifiDropReasonWatcher,
+        diagnosticsRepository: DiagnosticsRepository
     ): ConnectionManager = ConnectionManager(
         context,
         bleManager,
@@ -114,7 +116,8 @@ object AppModule {
         funnel,
         preflight,
         staHostRegistrar,
-        wifiDropWatcher
+        wifiDropWatcher,
+        diagnosticsRepository
     )
 
     @Provides
@@ -188,11 +191,20 @@ object AppModule {
         context,
         NLinkDatabase::class.java,
         "n-link.db"
-    ).addMigrations(NLinkDatabase.MIGRATION_1_2, NLinkDatabase.MIGRATION_2_3).build()
+    ).addMigrations(
+        NLinkDatabase.MIGRATION_1_2,
+        NLinkDatabase.MIGRATION_2_3,
+        NLinkDatabase.MIGRATION_3_4
+    ).build()
 
     @Provides
     @Singleton
     fun provideTransferHistoryDao(db: NLinkDatabase): TransferHistoryDao = db.transferHistoryDao()
+
+    @Provides
+    @Singleton
+    fun provideDiagnosticEventDao(db: NLinkDatabase): com.nikonlink.app.shared.diagnostics.DiagnosticEventDao =
+        db.diagnosticEventDao()
 
     @Provides
     @Singleton

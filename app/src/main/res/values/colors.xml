@@ -96,6 +96,11 @@
     <color name="lv_seg_track">#1FFFFFFF</color>
     <color name="lv_seg_sel">#33FFFFFF</color>
 
+    <!-- 诊断状态色（用于诊断事件时间线） -->
+    <color name="success">#2E7D32</color>
+    <color name="warning">#F9A825</color>
+    <color name="error">#C62828</color>
+
     <!-- 底部导航：背景与页面底色一致 -->
     <color name="nav_background">#FFFFFF</color>
     <!-- 选中项背后的胶囊：玻璃 dock 上用轻微下沉的暗色，实体 dock 上同样成立 -->

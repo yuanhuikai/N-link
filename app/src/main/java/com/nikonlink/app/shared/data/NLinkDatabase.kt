@@ -3,6 +3,8 @@ package com.nikonlink.app.shared.data
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.nikonlink.app.shared.diagnostics.DiagnosticEvent
+import com.nikonlink.app.shared.diagnostics.DiagnosticEventDao
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -185,14 +187,15 @@ suspend fun TransferHistoryDao.deleteByHandlesBatch(handles: List<Int>) {
  * PRD 4.2: Room + MediaStore（传输记录 + 照片归档）
  */
 @Database(
-    entities = [TransferRecord::class, PairedDevice::class, PhotoMarkEntity::class],
-    version = 3,
+    entities = [TransferRecord::class, PairedDevice::class, PhotoMarkEntity::class, DiagnosticEvent::class],
+    version = 4,
     exportSchema = false
 )
 abstract class NLinkDatabase : RoomDatabase() {
     abstract fun transferHistoryDao(): TransferHistoryDao
     abstract fun pairedDeviceDao(): PairedDeviceDao
     abstract fun photoMarkDao(): PhotoMarkDao
+    abstract fun diagnosticEventDao(): DiagnosticEventDao
 
     companion object {
         private const val TAG = "NLinkDb"
@@ -277,6 +280,44 @@ abstract class NLinkDatabase : RoomDatabase() {
                         "`storage_id`, `object_handle`, `file_name`, `file_size`, `capture_time`)"
                 )
                 Timber.tag(TAG).i("Migration 2->3 done: photo_marks created")
+            }
+        }
+
+        /**
+         * v3 → v4：新增 diagnostic_events 表（诊断事件持久化）。
+         *
+         * 用于存储结构化的诊断日志，支持按时间/分类/级别筛选，便于排查连接/传输问题。
+         * 表设计见 DiagnosticEvent.kt，包含时间戳、分类、级别、通道、摘要、详情等字段。
+         */
+        @JvmField
+        val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `diagnostic_events` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`timestamp` INTEGER NOT NULL, " +
+                        "`category` TEXT NOT NULL, " +
+                        "`level` TEXT NOT NULL, " +
+                        "`channel` TEXT NOT NULL, " +
+                        "`summary` TEXT NOT NULL, " +
+                        "`detail` TEXT, " +
+                        "`camera_model` TEXT, " +
+                        "`session_id` TEXT, " +
+                        "`extras` TEXT)"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_diagnostic_events_timestamp` " +
+                        "ON `diagnostic_events` (`timestamp`)"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_diagnostic_events_category` " +
+                        "ON `diagnostic_events` (`category`)"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_diagnostic_events_session_id` " +
+                        "ON `diagnostic_events` (`session_id`)"
+                )
+                Timber.tag(TAG).i("Migration 3->4 done: diagnostic_events created")
             }
         }
     }
