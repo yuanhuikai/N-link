@@ -101,6 +101,12 @@
             android:exported="false"
             android:theme="@style/Theme.NLink" />
 
+        <!-- 诊断事件时间线页 -->
+        <activity
+            android:name=".shared.diagnostics.DiagnosticsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NLink" />
+
         <!-- 全屏实时取景页：跟随重力感应横竖屏切换 -->
         <activity
             android:name=".camera.liveview.LiveViewActivity"

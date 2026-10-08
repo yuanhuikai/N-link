@@ -27,6 +27,9 @@ import com.nikonlink.app.device.data.DeviceRepository
 import com.nikonlink.app.camera.gallery.TransferManager
 import com.nikonlink.app.shared.common.AppEventLogger
 import com.nikonlink.app.shared.device.RomDetector
+import com.nikonlink.app.shared.diagnostics.DiagChannel
+import com.nikonlink.app.shared.diagnostics.DiagLevel
+import com.nikonlink.app.shared.diagnostics.DiagnosticsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -65,7 +68,8 @@ class ConnectionManager @Inject constructor(
     private val preflight: PreflightGate,
     private val staHostRegistrar: StaHostRegistrar,
     /** FR-36①：AP 面板等待期也要盯掉线原因——这条窗口里 WifiDirectConnector 还没跑起来，它自己的注册覆盖不到。 */
-    private val wifiDropWatcher: com.nikonlink.app.device.wifi_sta.WifiDropReasonWatcher
+    private val wifiDropWatcher: com.nikonlink.app.device.wifi_sta.WifiDropReasonWatcher,
+    private val diagnosticsRepository: DiagnosticsRepository
 ) {
     companion object {
         private const val TAG = "ConnectionMgr"
@@ -182,6 +186,17 @@ class ConnectionManager @Inject constructor(
 
     /** 对外暴露的连接状态（来自状态机） */
     val connectionState: StateFlow<ConnectionState> = stateMachine.state
+
+    /** 根据当前连接情况推断诊断通道类型 */
+    private fun currentDiagChannel(): DiagChannel = when {
+        usbPtpManager.usbState.value == UsbConnectionState.CONNECTED ||
+            usbPtpManager.usbState.value == UsbConnectionState.CONNECTING -> DiagChannel.USB
+        pairedDeviceAddress?.startsWith("wifi:") == true -> {
+            if (apGatewayResolver.isOnCameraAp()) DiagChannel.WIFI_AP else DiagChannel.WIFI_STA
+        }
+        bleManager.connectionState.value == BleConnectionState.CONNECTED -> DiagChannel.BLE
+        else -> DiagChannel.UNKNOWN
+    }
 
     fun start(scope: CoroutineScope) {
         this.scope = scope
@@ -1236,10 +1251,37 @@ class ConnectionManager @Inject constructor(
                 ConnectionState.ERROR_WAITING_RETRY -> "连接中断，正在重试..."
             }
             when (newState) {
-                ConnectionState.DISCONNECTED -> connectedSince = null
+                ConnectionState.DISCONNECTED -> {
+                    connectedSince = null
+                    if (oldState != ConnectionState.DISCONNECTED) {
+                        diagnosticsRepository.recordConnection(
+                            DiagLevel.INFO,
+                            currentDiagChannel(),
+                            "连接已断开"
+                        )
+                        diagnosticsRepository.endSession()
+                    }
+                }
                 ConnectionState.BLE_CONNECTED,
                 ConnectionState.FULLY_CONNECTED -> {
-                    if (connectedSince == null) connectedSince = System.currentTimeMillis()
+                    if (connectedSince == null) {
+                        connectedSince = System.currentTimeMillis()
+                        val channel = currentDiagChannel()
+                        diagnosticsRepository.recordConnection(
+                            DiagLevel.SUCCESS,
+                            channel,
+                            if (newState == ConnectionState.FULLY_CONNECTED) "连接成功" else "BLE 已连接",
+                            detail = ptpSession.lastDeviceModel?.takeIf { it.isNotBlank() }?.let { "相机型号：$it" }
+                        )
+                        ptpSession.lastDeviceModel?.let { diagnosticsRepository.setCameraModel(it) }
+                    }
+                }
+                ConnectionState.ERROR_WAITING_RETRY -> {
+                    diagnosticsRepository.recordConnection(
+                        DiagLevel.WARNING,
+                        currentDiagChannel(),
+                        "连接中断，等待重连"
+                    )
                 }
                 else -> {}
             }
@@ -1260,6 +1302,19 @@ class ConnectionManager @Inject constructor(
                     event.message
                 }
                 Timber.tag(TAG).w("Connection error surfaced to UI: ${_statusMessage.value}")
+                diagnosticsRepository.recordConnection(
+                    DiagLevel.ERROR,
+                    currentDiagChannel(),
+                    "连接失败",
+                    detail = event.message
+                )
+            } else if (event is ConnectionEvent.StartConnect) {
+                diagnosticsRepository.startSession(currentDiagChannel())
+                diagnosticsRepository.recordConnection(
+                    DiagLevel.INFO,
+                    currentDiagChannel(),
+                    "开始连接"
+                )
             }
         }
         eventListener = listener
