@@ -31,6 +31,7 @@ import com.nikonlink.app.device.connect.ConnFlags
 import com.nikonlink.app.shared.common.AppEventLogger
 import com.nikonlink.app.shared.common.AppSettings
 import com.nikonlink.app.shared.ui.pressEffect
+import com.nikonlink.app.shared.diagnostics.DiagnosticsActivity
 import com.nikonlink.app.shared.update.UpdateChecker
 import com.nikonlink.app.shared.update.UpdatePrompt
 import com.nikonlink.app.shared.update.UpdateResult
@@ -355,6 +356,12 @@ class SettingsFragment : Fragment(), GlassInsetAware {
                 }
                 .setNegativeButton("取消", null)
                 .show()
+        }
+
+        binding.rowDiagnostics.pressEffect()
+        binding.rowDiagnostics.setOnClickListener {
+            eventLogger.event("setting", "key" to "open_diagnostics")
+            DiagnosticsActivity.launch(requireContext())
         }
 
         binding.rowExportLog.pressEffect()
